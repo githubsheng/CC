@@ -18,7 +18,7 @@ public class TreeUtility {
     private void _dfs(TreeNode node) {
         if(node == null) return;
         if(node.left == null && node.right == null) {
-            System.out.println("hitting a leave");
+            //hitting a leave. todo: consider
         }
         _dfs(node.left);
         _dfs(node.right);
