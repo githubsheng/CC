@@ -50,6 +50,17 @@ public class InputUtil {
         return ret;
     }
 
+    public static int[][] parseToNestedArrays(String input) {
+        List<List<Integer>> t = parseToNestedList(input);
+        int l1 = t.size();
+        int l2 = t.get(0).size();
+        int[][] ret = new int[l1][l2];
+        for (int i = 0; i < l1; i++) {
+            ret[i] = t.get(i).stream().mapToInt(e -> e).toArray();
+        }
+        return ret;
+    }
+
     public static List<Integer> parseToList(String input){
         int listStart = -1;
         int listEnd = -1;
