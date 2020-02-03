@@ -1,8 +1,6 @@
 import references.input.InputUtil;
-import references.output.OutputUtil;
 
 import java.util.Arrays;
-import java.util.PriorityQueue;
 import java.util.Random;
 
 public class Problem973 {
@@ -66,6 +64,39 @@ public class Problem973 {
         }
     }
 
+    public int[][] kClosest3(int[][] points, int K) {
+        /*
+        the Kth smallest element in a sorted array will have index (first occurrence if duplicate) target = K -1
+        all elements before it will be smaller than it
+        all elements after it will be equal or bigger than it
+        for instance, [1, 2, 3, 3, 3, 4, 5, 5, 6]
+        3rd smallest element, first occurs at index 2 = 3 - 1. and all elements before it are smaller than it,
+        all elements after it are bigger than it
+         */
+        int target = K - 1;
+        int start = 0;
+        int end = points.length - 1;
+        int pivot;
+        while(start < end) {
+            pivot = partition(points, start, end);
+            if(target > pivot) {
+                start = pivot + 1;
+            } else if (target < pivot) {
+                end = pivot - 1;
+            } else {
+                //target == pivot
+                break;
+            }
+        }
+        return Arrays.copyOf(points, K);
+    }
+
+
+    /*
+     * after partition, pivotLoc will be pointing at an element such that,
+     * from lowIdx to pivot - 1 (inclusive), all elements are smaller than it
+     * from pivot + 1 to highIdx (inclusive), all elements are bigger or equal than it.
+     */
     private int partition(int[][] arr, int lowIdx, int highIdx) {
         if(lowIdx >= highIdx) return highIdx;
         int pivotVal = distance(arr[highIdx]);
@@ -90,10 +121,9 @@ public class Problem973 {
         arr[b] = temp;
     }
 
-
     public static void main(String[] args) {
         Problem973 sol = new Problem973();
-        int[][] ret = sol.kClosest(InputUtil.parseToNestedArrays("[[6,10],[-3,3],[-2,5],[0,2]]"), 3);
+        int[][] ret = sol.kClosest2(InputUtil.parseToNestedArrays("[[6,10],[-3,3],[-2,5],[0,2]]"), 3);
         System.out.println(ret);
     }
 }
