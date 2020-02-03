@@ -1,5 +1,3 @@
-package google;
-
 /*
 Given a 2D array of distinct integers with n numbers, "compress" the array such that the resulting array's numbers are in
 the range [1, n] and their relative order is kept.

@@ -1,6 +1,7 @@
 package references.common;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Commons {
@@ -48,11 +49,6 @@ public final int characterOffset = 97;
             }
 
         }
-
-
-
-
-
 
 
     }
