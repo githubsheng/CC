@@ -23,9 +23,9 @@ class WhatBatch {
             String batch = queue.poll();
             for(String c : graph.get(batch)) {
 
-                if(last.get(batch).compareTo(last.get(c)) >= 0) {
-                    //batch ran after its children, means, children not yet reran
-                    stale.add(c);
+                if(last.get(batch).compareTo(last.get(c)) >= 0 //batch ran after its children, means, children not yet reran
+                        || stale.contains(batch)) { //or batch itself is already identified as stale
+                    stale.add(c); //its children must be stale too.
                 }
 
                 int cin = indegree.get(c) - 1;

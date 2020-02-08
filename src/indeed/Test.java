@@ -1,118 +1,74 @@
 package indeed;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Test {
-    private static int minCost = Integer.MAX_VALUE;
-    public List<Integer> findMinCostFromRootToLeaf(TreeNode root) {
-        List<Integer> result = new ArrayList<>();
-        if (root == null) {
-            return result;
+    int count;
+    int totaldfs;
+    Map<String,Integer> dfsMap = new HashMap<>();
+    public float sumPossibilityButtomUpDP(int dice, int target) {
+        int total = (int) Math.pow(6,dice);
+
+        int[][] dp = new int[dice+1][target+1];
+        for(int i = 1; i <= Math.min(target,6); i++) {
+            dp[1][i] = 1;
         }
+        for (int i = 2; i <= dice; i++)
+            for (int j = 1; j <= target; j++)
+                for (int k = 1; k <= 6 && k < j; k++)
+                    dp[i][j] += dp[i-1][j-k];
 
-        List<Integer> curr = new ArrayList<>();
-        curr.add(root.val);
-        findMinCostHelper(root, root.val, curr, result);
+        return (float)dp[dice][target]/total;
+    }
 
+
+    public float sumWithDFS(int dice,int target) {
+        int total = (int) Math.pow(6,dice);
+        dfs(dice, target);
+        return (float)totaldfs/total;
+    }
+
+    public void dfs(int dice, int target) {
+        if(target == 0 && dice == 0) {
+            totaldfs++;
+            return;
+        }
+        if(dice == 0 || target <= 0){
+            return;
+        }
+        for(int i=1; i<=6;i++){
+            dfs(dice-1,target-i);
+        }
+    }
+
+    public   float sumwithDFSMap(int dice, int target){
+        int totalsol = dfsMapApp(dice,target);
+        int total = (int) Math.pow(6,dice);
+        return (float)totalsol/total;
+    }
+    private int dfsMapApp(int dice, int target) {
+        if(dice == 0 ) {
+            return target ==0?1:0;
+        }
+        String  key =  dice+"_" + target;
+        if(dfsMap.containsKey(key)){
+            return dfsMap.get(key);
+        }
+        int result = 0;
+        for(int i = 1; i <= 6;i++){
+            result+=dfsMapApp(dice-1,target-i);
+        }
+        dfsMap.put(key, result);
         return result;
     }
 
-
-    private void findMinCostHelper(TreeNode root, int cost, List<Integer>
-            curr, List<Integer> result) {
-
-        if (root.children == null || root.children.length == 0) {
-            if (cost < minCost) {
-                minCost = cost;
-                result.clear();
-                result.addAll(curr);
-            }
-            return;
-        }
-
-        for (TreeNode child : root.children) {
-            curr.add(child.val);
-            findMinCostHelper(child, cost + child.val, curr, result);
-            curr.remove(curr.size() - 1);
-        }
-    }
-
-
     public static void main(String[] args) {
-        Test sol = new Test();
+        Test dc = new Test();
+//        System.out.println(dc.sumPossibility(10,35));
+//        System.out.println(dc.sumPossibilityTopDownDP(10,35));
+        System.out.println(dc.sumPossibilityButtomUpDP(10,25));
+        System.out.println(dc.sumWithDFS(10,25));
+        System.out.println(dc.sumwithDFSMap(10,25));
 
-        TreeNode root = new TreeNode(1, 2);
-        root.children[0] = new TreeNode(2, 2);
-        root.children[1] = new TreeNode(3, 3);
-        root.children[0].children[0] = new TreeNode(4, 0);
-        root.children[0].children[1] = new TreeNode(2, 0);
-        root.children[1].children[0] = new TreeNode(3, 0);
-        root.children[1].children[1] = new TreeNode(2, 0);
-        root.children[1].children[2] = new TreeNode(0, 0);
-
-        List<Integer> result = sol.findMinCostFromRootToLeaf(root);
-
-        for (Integer e : result) {
-            System.out.print(e + " ");
-        }
-
-        System.out.println("");
-        System.out.println(minCost);
-        List<Integer> result2 = sol.findMinCost(root);
-        for (Integer e : result2) {
-            System.out.print(e + " ");
-        }
-
-
-    }
-    public  List<Integer> findMinCost(TreeNode root){
-        ResultWrapper result = new ResultWrapper();
-        if(root == null){
-            return result.path;
-        }
-        ResultWrapper current =  new ResultWrapper();
-        current.path.add(root.val);
-        current.cost = root.val;
-        helper(root,result,current);
-        System.out.println("");
-        System.out.println(result.cost);
-        return result.path;
-    }
-
-    private void helper(TreeNode root, ResultWrapper result, ResultWrapper current) {
-        if(root.children == null || root.children.length == 0){
-            if(result.cost > current.cost){
-                result.cost = current.cost;
-                result.path = new ArrayList<Integer>(current.path);
-            }
-            return;
-        }
-        TreeNode[] children = root.children;
-        for(TreeNode node : children){
-            current.path.add(node.val);
-            current.cost += node.val;
-            helper(node,result,current);
-            current.path.remove(current.path.size()-1);
-            current.cost -= node.val;
-        }
-    }
-
-    class ResultWrapper {
-        List<Integer> path;
-        int cost;
-        public ResultWrapper(){
-            path = new ArrayList<Integer>();
-            cost = Integer.MAX_VALUE;
-        }
-    }
-    static class TreeNode {
-        int val;
-        TreeNode[] children;
-
-        public TreeNode(int val, int n) {
-            this.val = val;
-            this.children = new TreeNode[n];
-        }
     }
 }
