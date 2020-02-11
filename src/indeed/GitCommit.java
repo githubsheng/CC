@@ -2,7 +2,7 @@ package indeed;
 
 import java.util.*;
 
-public final class WhatCommit {
+public final class GitCommit {
 
     public List<String> printAllNode(Node node) {
 

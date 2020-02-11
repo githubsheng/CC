@@ -2,7 +2,7 @@ package indeed;
 
 import java.util.*;
 
-class WhatBatch {
+class StaleBatch {
 
     public Set<String> findStaleBatches(String[][] preSteps, String[][] lastExecutionTimes) {
 
