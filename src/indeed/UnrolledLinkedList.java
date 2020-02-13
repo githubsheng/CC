@@ -42,12 +42,11 @@ public final class UnrolledLinkedList {
     private NodeOffset getInsertionNode(Node start, int index) {
         if(index == 0) return new NodeOffset(start, 0);
         Node node = start;
-        while(index - node.size > 0) {
-            index -= node.size;
+        int offset = index;
+        while(offset - node.size > 0) {
+            offset -= node.size;
             node = node.next;
         }
-        int offset = index;
-        if(offset == 0) offset = node.size;
         return new NodeOffset(node, offset);
     }
 

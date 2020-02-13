@@ -1,10 +1,5 @@
 import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.regex.*;
 
 public class Solution {
 
@@ -78,7 +73,7 @@ public class Solution {
 
     public static void main(String[] args) throws IOException {
 //        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
-        Scanner scanner = new Scanner(Solution.class.getResourceAsStream("input.txt"));
+        Scanner scanner = new Scanner(Solution.class.getResourceAsStream("1.txt/input.txt"));
 
         String[] graphNodesEdges = scanner.nextLine().split(" ");
         int graphNodes = Integer.parseInt(graphNodesEdges[0].trim());

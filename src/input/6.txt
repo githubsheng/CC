@@ -1,0 +1,26 @@
+i = 1
+if i == 2:
+    i = 3
+    if i == 4:
+        break
+        if i == 100:
+            i = 1
+            if i == 2:
+                i = 3
+                if i == 4:
+                    break
+            i = 6
+            i = 7
+i = 6
+i = 7
+
+
+# correct
+
+
+
+
+
+
+
+
