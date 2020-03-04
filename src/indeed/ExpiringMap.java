@@ -1,6 +1,7 @@
 package indeed;
 import java.util.*;
 
+//looks like this is a phone screen question, so less important
 public class ExpiringMap {
 
     private Map<String, Entry> m = new HashMap<>();

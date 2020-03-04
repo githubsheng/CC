@@ -57,14 +57,13 @@ public class NaryTreeMinCost {
     }
 
     private void helper(TreeNode node, Path path, Path result) {
+        if(path.totalCost + node.cost >= result.totalCost) return;
         path.addNode(node);
         //if node is leaf
-        if(isLeaf(node) && path.totalCost < result.totalCost) {
+        if(isLeaf(node)) {
             result.copyFromPath(path);
         } else {
-            for(TreeNode c : node.children) {
-                helper(c, path, result);
-            }
+            for(TreeNode c : node.children) helper(c, path, result);
         }
         path.backTrack();
     }
@@ -95,15 +94,15 @@ public class NaryTreeMinCost {
 
 
     private static class PathNode {
-        int totalCost;
+        int totalCost = Integer.MAX_VALUE;
         PathNode prevInPath;
         TreeNode treeNode;
 
         PathNode(PathNode prev, TreeNode treeNode) {
             this.prevInPath = prev;
             this.treeNode = treeNode;
-            this.totalCost = treeNode.cost;
-            if(prev != null) this.totalCost += prev.totalCost;
+            if(prev != null && treeNode != null)
+                totalCost = treeNode.cost + prevInPath.totalCost;
         }
 
         List<TreeNode> getPathFromRoot() {
@@ -126,10 +125,11 @@ public class NaryTreeMinCost {
 
     public List<TreeNode> findMinCostUsingBfs(TreeNode root) {
         PathNode minLeaf = new PathNode(null, null);
-        minLeaf.totalCost = Integer.MAX_VALUE;
 
         Queue<PathNode> q = new LinkedList<>();
-        q.offer(new PathNode(null, root));
+        PathNode start = new PathNode(null, root);
+        start.totalCost = root.cost;
+        q.offer(start);
         while(!q.isEmpty()) {
             PathNode pn = q.poll();
 
@@ -180,18 +180,15 @@ public class NaryTreeMinCost {
                 minLeaf = n;
             }
 
-
+            if(!graph.containsKey(n)) continue;
 
             for(Node next : graph.get(n)) {
-                //if a node does not lead to anywhere, graph.get(n) should return empty collection rather than null
-
                 int cost = next.cost + currCost;
                 if(cost < minCost.get(next) && cost < minLeafCost) {
                     minCost.put(next, cost);
                     pq.add(next);
                     mp.put(next, n);
                 }
-
             }
         }
 

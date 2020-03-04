@@ -24,6 +24,7 @@ public class KFrequentNumber {
             if(freq == k) res.add(n.val);
         }
 
+        //todo: need to break early, when heap size is less than k. be careful here.
         while(!minHeap.isEmpty()) {
             Node n = minHeap.poll();
             int currVal = n.val;

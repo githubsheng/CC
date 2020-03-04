@@ -30,6 +30,7 @@ public class OutputUtil {
         for (int i = 0; i < array.length; i++) {
             System.out.print(" " + array[i]);
         }
+        System.out.println("");
     }
 
     public static String integerArrayListToString(List<Integer> nums, int length) {

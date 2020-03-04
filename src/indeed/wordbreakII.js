@@ -40,33 +40,89 @@ class Solution {
         return ret;
     }
 
-    helper(str, root, start, path, ret, cache)           {
-        if(start == str.length) {
-            ret.push(path.join(" "));
-            return true;
-        }
-        //default value is undefined, not false.
-        if(cache[start] === false) return false;
-
+    //this is useful for returning all solutions
+    helperUsingTrie(str, root, start, cache) {
+        if(start > str.length) return [];
+        if(cache[start]) return cache[start];
+        const ret = [];
         const ps = this.getPrefixes(str, root, start);
-
-        let reachEnd = false;
         for(let p of ps) {
-            path.push(p);
-            let r = this.helper(str, root, start + p.length, path, ret, cache);
-            if(r) reachEnd = true;
-            path.pop(); //back track
+            if(start + p.length == str.length) {
+                ret.push(p);
+            } else {
+                const remainComb = this.helperUsingTrie(str, root, start + p.length, cache);
+                for(let comb of remainComb) {
+                    ret.push(p + " " + comb);
+                }
+            }
         }
-
-        cache[start] = reachEnd;
-        return reachEnd;
-    }
-
-    sol(word, dict) {
-        const root = this.buildTrie(dict), ret = [], cache = {};
-        this.helper(word, root, 0, [], ret, cache);
+        cache[start] = ret;
         return ret;
     }
+
+
+    solUsingTrie(word, dict) {
+        const root = this.buildTrie(dict), ret = [], cache = {};
+        this.helperUsingTrie(word, root, 0, cache);
+        return ret;
+    }
+
+
+    helperUsingSubstr(word, dict, cache) {
+        if(cache[word]) return cache[word];
+        const ret = [];
+
+        for(let i = 1; i < word.length; i++) {
+            const prefix = word.substring(0, i);
+
+            if(dict.has(prefix)) {
+                const suffix = word.substring(i);
+                const t = this.helperUsingSubstr(suffix, dict, cache);
+                for(let remain of t) {
+                    ret.push(`${prefix} ${remain}`);
+                }
+            }
+        }
+
+        if(dict.has(word)) ret.push(word);
+        cache[word] = ret;
+        return ret;
+
+    }
+
+    solUsingSubstr(word, dictList) {
+        const dict = new Set();
+        for(let e of dictList) dict.add(e);
+        return this.helperUsingSubstr(word, dict, {});
+    }
+
+    helperFindAnyUsingSubstr(word, dict, cache) {
+        if(cache[word]) return cache[word];
+        let ret;
+
+        for(let i = 1; i < word.length; i++) {
+            const prefix = word.substring(0, i);
+
+            if(dict.has(prefix)) {
+                const suffix = word.substring(i);
+                const t = this.helperFindAnyUsingSubstr(suffix, dict, cache);
+                if(!t) continue;
+                ret = `${prefix} ${t}`;
+                break;
+            }
+        }
+
+        if(dict.has(word)) ret = word;
+        cache[word] = ret;
+        return ret;
+    }
+
+    solFindAnySubstr(word, dictList) {
+        const dict = new Set();
+        for(let e of dictList) dict.add(e);
+        return this.helperFindAnyUsingSubstr(word, dict, {});
+    }
+
 }
 
 class Node {
@@ -76,5 +132,5 @@ class Node {
     }
 }
 
-const ret = new Solution().sol("catsanddog", ["cat", "cats", "and", "sand", "dog"]);
+const ret = new Solution().solFindAnySubstr("catsanddog", ["cat", "cats", "and", "sand", "dog"]);
 console.log(ret);
